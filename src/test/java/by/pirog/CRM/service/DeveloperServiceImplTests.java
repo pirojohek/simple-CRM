@@ -2,6 +2,7 @@ package by.pirog.CRM.service;
 
 import by.pirog.CRM.dto.sellerDto.request.SellerCreateRequestDto;
 import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
+import by.pirog.CRM.exception.SellerNotFoundException;
 import by.pirog.CRM.mapper.SellerMapper;
 import by.pirog.CRM.storage.entity.SellerEntity;
 import by.pirog.CRM.storage.repository.SellerRepository;
@@ -14,8 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
@@ -80,4 +83,41 @@ public class DeveloperServiceImplTests {
         verify(sellerRepository, times(1)).save(any(SellerEntity.class));
         assertSame(response, result);
     }
+
+    @Test
+    @DisplayName("Test seller find by id functionality")
+    void givenSellerId_whenFindById_thenReturnResponseDto(){
+        // given
+        Long sellerId = 1L;
+        SellerEntity seller = SellerUtils.getSellerEntityPersistent();
+
+        when(sellerRepository.findById(anyLong()))
+                .thenReturn(Optional.of(seller));
+
+        var expectedResult = mock(SellerResponseDto.class);
+        when(sellerMapper.sellerToResponseDto(any(SellerEntity.class)))
+                .thenReturn(expectedResult);
+
+        // when
+        var actualResult = sellerService.findSellerById(sellerId);
+        // then
+        assertSame(expectedResult, actualResult);
+        verify(sellerRepository).findById(sellerId);
+    }
+
+    @Test
+    @DisplayName("Test seller find by id functionality seller not found")
+    void givenSellerId_whenFindById_thenReturnNotFoundException(){
+        // given
+        Long sellerId = 1L;
+
+        when(sellerRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        // when
+        assertThrows(SellerNotFoundException.class, () -> {
+           sellerService.findSellerById(sellerId);
+        });
+    }
+
 }

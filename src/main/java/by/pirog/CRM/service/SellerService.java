@@ -9,6 +9,8 @@ public interface SellerService {
 
     SellerResponseDto createNewSeller(SellerCreateRequestDto request);
 
+    SellerResponseDto findSellerById(Long id);
+
     List<SellerResponseDto> getAllSellers();
 
 }

@@ -2,6 +2,7 @@ package by.pirog.CRM.service;
 
 import by.pirog.CRM.dto.sellerDto.request.SellerCreateRequestDto;
 import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
+import by.pirog.CRM.exception.SellerNotFoundException;
 import by.pirog.CRM.mapper.SellerMapper;
 import by.pirog.CRM.storage.entity.SellerEntity;
 import by.pirog.CRM.storage.repository.SellerRepository;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +35,16 @@ public class SellerServiceImpl implements SellerService {
         var savedSeller = this.sellerRepository.save(entity);
 
         return this.sellerMapper.sellerToResponseDto(savedSeller);
+    }
+
+    @Override
+    public SellerResponseDto findSellerById(Long id) {
+        Optional<SellerEntity> entity = this.sellerRepository.findById(id);
+
+        if (entity.isEmpty()){
+            throw new SellerNotFoundException("Seller with id: " + id + "not found");
+        }
+
+        return sellerMapper.sellerToResponseDto(entity.get());
     }
 }
