@@ -1,0 +1,83 @@
+package by.pirog.CRM.service;
+
+import by.pirog.CRM.dto.sellerDto.request.SellerCreateRequestDto;
+import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
+import by.pirog.CRM.mapper.SellerMapper;
+import by.pirog.CRM.storage.entity.SellerEntity;
+import by.pirog.CRM.storage.repository.SellerRepository;
+import by.pirog.CRM.utils.SellerUtils;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class DeveloperServiceImplTests {
+
+    @Mock
+    private SellerRepository sellerRepository;
+
+    @Mock
+    private SellerMapper sellerMapper;
+
+    @InjectMocks
+    private SellerServiceImpl sellerService;
+
+    @Test
+    @DisplayName("Test get all sellers functionality")
+    void givenTwoSellers_whenGetAll_thenReturnResponseSellerDtoList(){
+        // given
+        var seller1 = SellerUtils.getSellerEntityPersistent();
+        var seller2 = SellerUtils.getSellerSecondEntityPersistent();
+
+        List<SellerEntity> sellers = List.of(seller1, seller2);
+        when(sellerRepository.findAll()).thenReturn(sellers);
+
+        var response1 = mock(SellerResponseDto.class);
+        var response2 = mock(SellerResponseDto.class);
+
+        List<SellerResponseDto> responseDtoList = List.of(response1, response2);
+        when(sellerMapper.toListResponseDto(anyList())).thenReturn(responseDtoList);
+
+        // when
+        var response = sellerService.getAllSellers();
+
+        // then
+        verify(sellerRepository).findAll();
+        verify(sellerMapper).toListResponseDto(sellers);
+        assertSame(responseDtoList, response);
+    }
+
+    @Test
+    @DisplayName("Test create new seller functionality")
+    void givenCreateRequestDto_whenCreateNewSeller_thenCreatedNewEntity(){
+        // given
+        SellerCreateRequestDto request = new SellerCreateRequestDto(
+                "Best Seller",
+                "Contact info"
+        );
+        var sellerToSave = SellerUtils.getSellerEntityTransient();
+        when(sellerMapper.createSellerRequestToSellerEntity(any(SellerCreateRequestDto.class)))
+                .thenReturn(sellerToSave);
+        when(sellerRepository.save(any(SellerEntity.class)))
+                .thenReturn(SellerUtils.getSellerEntityPersistent());
+
+        var response = mock(SellerResponseDto.class);
+        when(sellerMapper.sellerToResponseDto(any(SellerEntity.class)))
+                .thenReturn(response);
+        // when
+        var result = sellerService.createNewSeller(request);
+
+        // then
+        verify(sellerRepository, times(1)).save(any(SellerEntity.class));
+        assertSame(response, result);
+    }
+}
