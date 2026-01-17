@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +18,9 @@ public class SellerRepositoryTests {
 
     @Autowired
     private SellerRepository sellerRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
 
     @BeforeEach
     void setup() {
@@ -74,5 +78,22 @@ public class SellerRepositoryTests {
         assertThat(updatedSeller).isNotNull();
         assertThat(updatedSeller.getName()).isEqualTo(updatedName);
 
+    }
+
+    @Test
+    @DisplayName("Test delete seller by id functionality")
+    void givenSavedSeller_whenDeleteById_thenSellerIsRemovedFromDB(){
+        // given
+        SellerEntity seller = SellerUtils.getSellerEntityTransient();
+        entityManager.persist(seller);
+        entityManager.flush();
+        entityManager.clear();
+        // when
+        this.sellerRepository.deleteById(seller.getId());
+
+        // then
+
+        var deletedSeller = entityManager.find(SellerEntity.class, seller.getId());
+        assertThat(deletedSeller).isNull();
     }
 }

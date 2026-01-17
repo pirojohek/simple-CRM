@@ -94,12 +94,12 @@ public class TransactionRepositoryTests {
         entityManager.persist(sellerEntity);
 
         TransactionEntity transaction = TransactionUtils.getTransactionEntityTransient(sellerEntity);
-        var savedTransaction = entityManager.persist(transaction);
+        entityManager.persist(transaction);
         entityManager.flush();
         entityManager.clear();
 
         // when
-        transactionRepository.deleteById(savedTransaction.getId());
+        transactionRepository.deleteById(transaction.getId());
 
         // then
         var deletedTransaction = entityManager.find(TransactionEntity.class, 1L);
