@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: CRM
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:54321/storage
+    username: user
+    password: password
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:/db/schema.sql
+
+  jpa:
+    show-sql: true
