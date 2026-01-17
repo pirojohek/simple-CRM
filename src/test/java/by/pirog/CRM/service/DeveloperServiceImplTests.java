@@ -120,4 +120,30 @@ public class DeveloperServiceImplTests {
         });
     }
 
+
+    @Test
+    @DisplayName("Test delete by id functionality")
+    void givenSellerId_whenDeleteById_thenSellerIsRemoved(){
+        // given
+        when(sellerRepository.findById(anyLong()))
+                .thenReturn(Optional.of(SellerUtils.getSellerEntityPersistent()));
+        // when
+        sellerService.deleteById(1L);
+
+        // then
+        verify(sellerRepository, times(1))
+                .deleteById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Test delete by id functionality seller not found exception")
+    void givenSellerId_whenDeleteById_thenSellerNotFoundException(){
+        // given
+        when(sellerRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+        //
+        assertThrows(SellerNotFoundException.class, () -> {
+            sellerService.deleteById(1L);
+        });
+    }
 }
