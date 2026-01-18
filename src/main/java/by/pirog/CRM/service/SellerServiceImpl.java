@@ -1,6 +1,7 @@
 package by.pirog.CRM.service;
 
 import by.pirog.CRM.dto.sellerDto.request.SellerCreateRequestDto;
+import by.pirog.CRM.dto.sellerDto.request.SellerUpdateRequestDto;
 import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
 import by.pirog.CRM.exception.SellerNotFoundException;
 import by.pirog.CRM.mapper.SellerMapper;
@@ -54,4 +55,28 @@ public class SellerServiceImpl implements SellerService {
                 .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + id + "not found"));
         this.sellerRepository.deleteById(id);
     }
+
+    @Override
+    public SellerResponseDto updateSeller(SellerUpdateRequestDto dto) {
+        SellerEntity entity = this.sellerRepository.findById(dto.id())
+                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + dto.id() + "not found"));
+
+        sellerMapper.updateSellerEntityFromRequestDto(dto, entity);
+        sellerRepository.save(entity);
+
+        return sellerMapper.sellerToResponseDto(entity);
+    }
+
+    @Override
+    public SellerResponseDto replaceSeller(SellerUpdateRequestDto dto) {
+        SellerEntity entity = this.sellerRepository.findById(dto.id())
+                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + dto.id() + "not found"));
+
+        entity.setContactInfo(dto.contactInfo());
+        entity.setName(dto.name());
+        sellerRepository.save(entity);
+
+        return sellerMapper.sellerToResponseDto(entity);
+    }
+
 }

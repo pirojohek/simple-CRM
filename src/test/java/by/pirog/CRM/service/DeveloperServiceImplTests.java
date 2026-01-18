@@ -1,6 +1,7 @@
 package by.pirog.CRM.service;
 
 import by.pirog.CRM.dto.sellerDto.request.SellerCreateRequestDto;
+import by.pirog.CRM.dto.sellerDto.request.SellerUpdateRequestDto;
 import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
 import by.pirog.CRM.exception.SellerNotFoundException;
 import by.pirog.CRM.mapper.SellerMapper;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -144,6 +146,92 @@ public class DeveloperServiceImplTests {
         //
         assertThrows(SellerNotFoundException.class, () -> {
             sellerService.deleteById(1L);
+        });
+    }
+
+    @Test
+    @DisplayName("Test update seller functionality")
+    void givenUpdateSellerDto_whenUpdateSeller_thenRepositoryIsCalled(){
+        // given
+        SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
+                1L,
+                "Seller",
+                null
+        );
+        var seller = SellerUtils.getSellerEntityPersistent();
+
+        when(sellerRepository.findById(anyLong())).thenReturn(Optional.of(seller));
+        var expectedResult = mock(SellerResponseDto.class);
+        when(sellerMapper.sellerToResponseDto(any(SellerEntity.class)))
+                .thenReturn(expectedResult);
+
+        // when
+        var actualResult = sellerService.updateSeller(dto);
+
+        // then
+        assertSame(expectedResult, actualResult);
+        verify(sellerMapper).updateSellerEntityFromRequestDto
+                (any(SellerUpdateRequestDto.class), any(SellerEntity.class));
+        verify(sellerRepository).save(seller);
+    }
+
+    @Test
+    @DisplayName("Test seller not found when update seller functionality")
+    void givenUpdateSellerDto_whenUpdateSeller_thenSellerNotFound(){
+        // given
+        SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
+                1L,
+                "Seller",
+                null
+        );
+        when(sellerRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(SellerNotFoundException.class, () -> {
+            sellerService.updateSeller(dto);
+        });
+    }
+
+    @Test
+    @DisplayName("Test replace seller functionality")
+    void givenUpdateSellerDtoWithNullFields_whenReplaceSeller_thenSellerReplaceFields(){
+        // given
+        SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
+                1L,
+                null,
+                null
+        );
+        SellerEntity seller = SellerUtils.getSellerEntityPersistent();
+
+        when(sellerRepository.findById(anyLong())).thenReturn(Optional.of(seller));
+
+        var expectedResult = mock(SellerResponseDto.class);
+        when(sellerMapper.sellerToResponseDto(any(SellerEntity.class)))
+                .thenReturn(expectedResult);
+
+        // when
+        var actualResult = sellerService.replaceSeller(dto);
+        // then
+        assertSame(expectedResult, actualResult);
+        assertThat(seller.getContactInfo()).isNull();
+        assertThat(seller.getName()).isNull();
+        verify(sellerRepository).save(seller);
+    }
+
+    @Test
+    @DisplayName("Test seller not found when replace seller functionality")
+    void givenUpdateSellerDto_whenReplaceSeller_thenSellerNotFound(){
+        // given
+        SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
+                1L,
+                "Seller",
+                null
+        );
+        when(sellerRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(SellerNotFoundException.class, () -> {
+            sellerService.replaceSeller(dto);
         });
     }
 }
