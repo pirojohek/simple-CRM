@@ -14,6 +14,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SellerMapper {
 
+    @Mapping(source = "id", target = "id")
     SellerResponseDto sellerToResponseDto(SellerEntity seller);
 
     SellerEntity createSellerRequestToSellerEntity(SellerCreateRequestDto dto);
