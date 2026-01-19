@@ -1,0 +1,33 @@
+package by.pirog.CRM.exception;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.ErrorResponseException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.net.URI;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(SellerNotFoundException.class)
+    public ErrorResponseException sellerNotFoundExceptionHandler(
+            SellerNotFoundException ex,
+            HttpServletRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problemDetail.setTitle("Seller Not Found Exception");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(URI.create(request.getRequestURI()));
+        problemDetail.setProperty("method", request.getMethod());
+
+        return new ErrorResponseException(
+                HttpStatus.NOT_FOUND,
+                problemDetail,
+                ex
+        );
+    }
+
+
+}

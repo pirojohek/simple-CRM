@@ -17,8 +17,8 @@ public interface SellerService {
     List<SellerResponseDto> getAllSellers();
 
     // PATCH
-    SellerResponseDto updateSeller(SellerUpdateRequestDto dto);
+    SellerResponseDto updateSeller(Long sellerId, SellerUpdateRequestDto dto);
 
     // PUT
-    SellerResponseDto replaceSeller(SellerUpdateRequestDto dto);
+    SellerResponseDto replaceSeller(Long sellerId, SellerUpdateRequestDto dto);
 }

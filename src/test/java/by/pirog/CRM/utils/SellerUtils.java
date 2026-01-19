@@ -1,5 +1,6 @@
 package by.pirog.CRM.utils;
 
+import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
 import by.pirog.CRM.storage.entity.SellerEntity;
 
 public class SellerUtils {
@@ -31,6 +32,21 @@ public class SellerUtils {
                 .id(2L)
                 .name("Second Seller")
                 .contactInfo("Contact Info Second Seller")
+                .build();
+    }
+
+    public static SellerResponseDto getSellerResponseDto(){
+        return SellerResponseDto.builder()
+                .id(1L)
+                .contactInfo("Contact Info")
+                .name("Seller")
+                .build();
+    }
+    public static SellerResponseDto getSecondSellerResponseDto(){
+        return SellerResponseDto.builder()
+                .id(1L)
+                .contactInfo("Contact Info Second Seller")
+                .name("Second Seller")
                 .build();
     }
 }

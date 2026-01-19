@@ -153,8 +153,8 @@ public class DeveloperServiceImplTests {
     @DisplayName("Test update seller functionality")
     void givenUpdateSellerDto_whenUpdateSeller_thenRepositoryIsCalled(){
         // given
+        Long sellerId = 1L;
         SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
-                1L,
                 "Seller",
                 null
         );
@@ -166,7 +166,7 @@ public class DeveloperServiceImplTests {
                 .thenReturn(expectedResult);
 
         // when
-        var actualResult = sellerService.updateSeller(dto);
+        var actualResult = sellerService.updateSeller(sellerId, dto);
 
         // then
         assertSame(expectedResult, actualResult);
@@ -179,8 +179,8 @@ public class DeveloperServiceImplTests {
     @DisplayName("Test seller not found when update seller functionality")
     void givenUpdateSellerDto_whenUpdateSeller_thenSellerNotFound(){
         // given
+        Long sellerId = 1L;
         SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
-                1L,
                 "Seller",
                 null
         );
@@ -188,7 +188,7 @@ public class DeveloperServiceImplTests {
 
         // then
         assertThrows(SellerNotFoundException.class, () -> {
-            sellerService.updateSeller(dto);
+            sellerService.updateSeller(sellerId, dto);
         });
     }
 
@@ -196,8 +196,8 @@ public class DeveloperServiceImplTests {
     @DisplayName("Test replace seller functionality")
     void givenUpdateSellerDtoWithNullFields_whenReplaceSeller_thenSellerReplaceFields(){
         // given
+        Long sellerId = 1L;
         SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
-                1L,
                 null,
                 null
         );
@@ -210,7 +210,7 @@ public class DeveloperServiceImplTests {
                 .thenReturn(expectedResult);
 
         // when
-        var actualResult = sellerService.replaceSeller(dto);
+        var actualResult = sellerService.replaceSeller(sellerId, dto);
         // then
         assertSame(expectedResult, actualResult);
         assertThat(seller.getContactInfo()).isNull();
@@ -222,8 +222,8 @@ public class DeveloperServiceImplTests {
     @DisplayName("Test seller not found when replace seller functionality")
     void givenUpdateSellerDto_whenReplaceSeller_thenSellerNotFound(){
         // given
+        Long sellerId = 1L;
         SellerUpdateRequestDto dto = new SellerUpdateRequestDto(
-                1L,
                 "Seller",
                 null
         );
@@ -231,7 +231,7 @@ public class DeveloperServiceImplTests {
 
         // then
         assertThrows(SellerNotFoundException.class, () -> {
-            sellerService.replaceSeller(dto);
+            sellerService.replaceSeller(sellerId, dto);
         });
     }
 }

@@ -25,16 +25,13 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public List<SellerResponseDto> getAllSellers() {
         List<SellerEntity> sellers = this.sellerRepository.findAll();
-
         return this.sellerMapper.toListResponseDto(sellers);
     }
 
     @Override
     public SellerResponseDto createNewSeller(SellerCreateRequestDto request) {
         SellerEntity entity = this.sellerMapper.createSellerRequestToSellerEntity(request);
-
         var savedSeller = this.sellerRepository.save(entity);
-
         return this.sellerMapper.sellerToResponseDto(savedSeller);
     }
 
@@ -57,9 +54,9 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerResponseDto updateSeller(SellerUpdateRequestDto dto) {
-        SellerEntity entity = this.sellerRepository.findById(dto.id())
-                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + dto.id() + "not found"));
+    public SellerResponseDto updateSeller(Long sellerId, SellerUpdateRequestDto dto) {
+        SellerEntity entity = this.sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + sellerId + "not found"));
 
         sellerMapper.updateSellerEntityFromRequestDto(dto, entity);
         sellerRepository.save(entity);
@@ -68,9 +65,9 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerResponseDto replaceSeller(SellerUpdateRequestDto dto) {
-        SellerEntity entity = this.sellerRepository.findById(dto.id())
-                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + dto.id() + "not found"));
+    public SellerResponseDto replaceSeller(Long sellerId, SellerUpdateRequestDto dto) {
+        SellerEntity entity = this.sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + sellerId + "not found"));
 
         entity.setContactInfo(dto.contactInfo());
         entity.setName(dto.name());
