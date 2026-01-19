@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DeveloperServiceImplTests {
+public class SellerServiceImplTests {
 
     @Mock
     private SellerRepository sellerRepository;
