@@ -120,6 +120,8 @@ public class SellerServiceImplTests {
         assertThrows(SellerNotFoundException.class, () -> {
            sellerService.findSellerById(sellerId);
         });
+        verify(sellerRepository).findById(anyLong());
+        verifyNoInteractions(sellerMapper);
     }
 
 
@@ -147,6 +149,7 @@ public class SellerServiceImplTests {
         assertThrows(SellerNotFoundException.class, () -> {
             sellerService.deleteById(1L);
         });
+        verify(sellerRepository, never()).deleteById(anyLong());
     }
 
     @Test
@@ -190,6 +193,7 @@ public class SellerServiceImplTests {
         assertThrows(SellerNotFoundException.class, () -> {
             sellerService.updateSeller(sellerId, dto);
         });
+        verify(sellerRepository, never()).save(any(SellerEntity.class));
     }
 
     @Test
@@ -233,5 +237,6 @@ public class SellerServiceImplTests {
         assertThrows(SellerNotFoundException.class, () -> {
             sellerService.replaceSeller(sellerId, dto);
         });
+        verify(sellerRepository, never()).save(any(SellerEntity.class));
     }
 }
