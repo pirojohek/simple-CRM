@@ -13,21 +13,31 @@ import java.net.URI;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(SellerNotFoundException.class)
-    public ErrorResponseException sellerNotFoundExceptionHandler(
+    public ErrorResponseException handleSellerNotFound(
             SellerNotFoundException ex,
             HttpServletRequest request) {
+        return buildNotFoundProblem(ex, request, "Seller Not Found");
+    }
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ErrorResponseException handleTransactionNotFound(
+            TransactionNotFoundException ex,
+            HttpServletRequest request) {
+        return buildNotFoundProblem(ex, request, "Transaction Not Found");
+    }
+
+    private ErrorResponseException buildNotFoundProblem(
+            RuntimeException ex,
+            HttpServletRequest request,
+            String title) {
+
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        problemDetail.setTitle("Seller Not Found Exception");
+        problemDetail.setTitle(title);
         problemDetail.setDetail(ex.getMessage());
         problemDetail.setInstance(URI.create(request.getRequestURI()));
         problemDetail.setProperty("method", request.getMethod());
 
-        return new ErrorResponseException(
-                HttpStatus.NOT_FOUND,
-                problemDetail,
-                ex
-        );
+        return new ErrorResponseException(HttpStatus.NOT_FOUND, problemDetail, ex);
     }
-
 
 }
