@@ -20,7 +20,7 @@ public class TransactionEntity {
     @Column(name = "transaction_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seller_id", nullable = false)
     private SellerEntity seller;
 
