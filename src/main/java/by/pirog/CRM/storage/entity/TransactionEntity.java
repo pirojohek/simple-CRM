@@ -32,7 +32,7 @@ public class TransactionEntity {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
-    @Column(name = "transaction_date", insertable = false, updatable = false)
+    @Column(name = "transaction_date", updatable = false)
     private LocalDateTime transactionDate;
 
     @PrePersist
