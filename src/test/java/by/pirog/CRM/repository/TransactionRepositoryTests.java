@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,7 +66,7 @@ public class TransactionRepositoryTests {
 
     @Test
     @DisplayName("Test delete transaction by id functionality")
-    void givetTransactionId_whenDeleteById_thenTransactionIsRemovedFromDb(){
+    void givenTransactionId_whenDeleteById_thenTransactionIsRemovedFromDb(){
         // given
         SellerEntity sellerEntity = SellerUtils.getSellerEntityTransient();
         entityManager.persist(sellerEntity);
@@ -82,5 +83,34 @@ public class TransactionRepositoryTests {
         var deletedTransaction = entityManager.find(TransactionEntity.class, 1L);
 
         assertThat(deletedTransaction).isNull();
+    }
+
+    @Test
+    @DisplayName("Test get seller transactions by seller id functionality")
+    void givenSellerId_whenGetTransactionEntitiesBySellerId_thenValidResponse(){
+        // given
+        SellerEntity seller1 = SellerUtils.getSellerEntityTransient();
+        SellerEntity seller2 = SellerUtils.getSellerSecondEntityTransient();
+        entityManager.persist(seller1);
+        entityManager.persist(seller2);
+        entityManager.flush();
+
+        TransactionEntity seller1Transaction = TransactionUtils.getTransactionEntityTransient(seller1);
+        TransactionEntity seller2Transaction1 = TransactionUtils.getTransactionEntityTransient(seller2);
+        TransactionEntity seller2Transaction2 = TransactionUtils.getTransactionSecondEntityTransient(seller2);
+        entityManager.persist(seller1Transaction);
+        entityManager.persist(seller2Transaction1);
+        entityManager.persist(seller2Transaction2);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<TransactionEntity> response = transactionRepository.getTransactionEntitiesBySellerId(seller2.getId());
+
+        // then
+        assertThat(response).hasSize(2);
+        assertThat(response.get(0).getSeller().getId()).isEqualTo(seller2.getId());
+        assertThat(response.get(1).getSeller().getId()).isEqualTo(seller2.getId());
     }
 }
