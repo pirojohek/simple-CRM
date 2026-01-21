@@ -122,6 +122,31 @@ public class SellerControllerTests {
     }
 
     @Test
+    @DisplayName("Test create seller functionality validation exception")
+    void givenNotValidSellerDto_whenCreateSeller_thenBadRequestResult() throws Exception {
+        // given
+        var createSellerRequest = new SellerCreateRequestDto(
+                null,
+                "Contact Info"
+        );
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/sellers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createSellerRequest)));
+
+        // then
+        verify(sellerService, never()).createNewSeller(any(SellerCreateRequestDto.class));
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.instance").value("/api/sellers"))
+                .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
+                .andExpect(jsonPath("$.errors.length()").exists());
+
+    }
+
+
+    @Test
     @DisplayName("Test delete seller functionality")
     void givenIdSeller_whenDeleteSeller_thenNoContentResponse() throws Exception {
         // given
