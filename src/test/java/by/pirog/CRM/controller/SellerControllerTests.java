@@ -181,7 +181,7 @@ public class SellerControllerTests {
 
     @Test
     @DisplayName("Test update seller functionality not found exception")
-    void givenSellerIdAndUpdateSellerRequest_whenUpdateSeller_thenNotFoundException() throws Exception{
+    void givenSellerIdAndUpdateSellerRequest_whenUpdateSeller_thenNotFoundException() throws Exception {
         // given
         Long sellerId = 1L;
         var updateSellerRequest = new SellerUpdateRequestDto(
@@ -204,7 +204,7 @@ public class SellerControllerTests {
 
     @Test
     @DisplayName("Test replace seller functionality")
-    void givenSellerIdAndUpdateSellerRequest_whenUpdateSeller_thenSuccessResult() throws Exception{
+    void givenSellerIdAndUpdateSellerRequest_whenUpdateSeller_thenSuccessResult() throws Exception {
         // given
         Long sellerId = 1L;
         var updateSellerRequest = new SellerUpdateRequestDto(
@@ -229,7 +229,7 @@ public class SellerControllerTests {
 
     @Test
     @DisplayName("Test replace seller functionality not found exception")
-    void givenSellerIdAndUpdateSellerRequest_whenReplaceSeller_thenNotFoundException() throws Exception{
+    void givenSellerIdAndUpdateSellerRequest_whenReplaceSeller_thenNotFoundException() throws Exception {
         // given
         Long sellerId = 1L;
         var updateSellerRequest = new SellerUpdateRequestDto(

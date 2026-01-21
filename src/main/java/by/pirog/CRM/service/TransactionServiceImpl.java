@@ -57,6 +57,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionResponseDto> getSellerTransactions(Long sellerId) {
+        this.sellerService.findSellerById(sellerId);
         List<TransactionEntity> entities = this.repository
                 .getTransactionEntitiesBySellerId(sellerId);
         return mapper.transactionsToListResponseDto(entities);

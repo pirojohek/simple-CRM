@@ -201,5 +201,6 @@ public class TransactionServiceImplTests {
         assertSame(expectedResult, result);
         verify(repository).getTransactionEntitiesBySellerId(id);
         verify(mapper).transactionsToListResponseDto(listTransactions);
+        verify(sellerService).findSellerById(id);
     }
 }

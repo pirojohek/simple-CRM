@@ -21,7 +21,7 @@ public class TransactionEntity {
     @Column(name = "transaction_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     private SellerEntity seller;
 
