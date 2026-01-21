@@ -22,8 +22,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -129,5 +128,29 @@ public class SellerTransactionsControllerTests {
         result.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.instance").value("/api/sellers/%d/transactions".formatted(sellerId)))
                 .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()));
+    }
+
+
+    @Test
+    @DisplayName("Test create transaction functionality transaction not valid ")
+    void givenSellerIdAndCreateRequest_transactionNotValid_thenReturnValidationErrorStatus() throws Exception{
+        // given
+        Long sellerId = 1L;
+        TransactionCreateRequestDto request = new TransactionCreateRequestDto(
+                BigDecimal.valueOf(1255555555545.00),
+                null
+        );
+        // when
+        ResultActions result = mockMvc.perform(post("/api/sellers/%d/transactions".formatted(sellerId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        verify(transactionService, never()).createTransaction(anyLong(), any(TransactionCreateRequestDto.class));
+
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.method").value(HttpMethod.POST.name()))
+                .andExpect(jsonPath("$.instance").value("/api/sellers/%d/transactions".formatted(sellerId)))
+                .andExpect(jsonPath("$.errors.length()").value(2));
     }
 }
