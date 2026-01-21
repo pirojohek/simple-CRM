@@ -61,6 +61,4 @@ public class AnalyticsRepositoryImplTests {
         assertThat(result).isNotNull();
         assertThat(result.sellerId()).isEqualTo(seller1.getId());
     }
-
-
 }

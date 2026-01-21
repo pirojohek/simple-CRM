@@ -4,6 +4,7 @@ import by.pirog.CRM.dto.sellerDto.request.SellerCreateRequestDto;
 import by.pirog.CRM.dto.sellerDto.request.SellerUpdateRequestDto;
 import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
 import by.pirog.CRM.service.SellerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class SellerController {
     }
 
     @PostMapping
-    public ResponseEntity<SellerResponseDto> createSeller(@RequestBody SellerCreateRequestDto dto) {
+    public ResponseEntity<SellerResponseDto> createSeller(@Valid @RequestBody SellerCreateRequestDto dto) {
         SellerResponseDto response = this.sellerService.createNewSeller(dto);
         return ResponseEntity.created(URI.create("/api/sellers/%d".formatted(response.getId())))
                 .body(response);

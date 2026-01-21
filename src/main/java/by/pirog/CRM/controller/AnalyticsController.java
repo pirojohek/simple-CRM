@@ -20,7 +20,7 @@ import java.util.List;
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
-
+    // http://localhost:8080/api/analytics/sellers/transactions/sum-less-than?from=2026-01-01T00:00:00&to=2026-01-10T23:59:59&maxSum=1000
     @GetMapping("/sellers/transactions/sum-less-than")
     public ResponseEntity<List<SellerAnalyticsResponseDto>> findSellersWithSumLessThan(
             @RequestParam LocalDateTime from,
