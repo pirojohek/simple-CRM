@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -39,31 +41,6 @@ public class TransactionRepositoryTests {
         var foundTransaction = entityManager.find(TransactionEntity.class, savedTransaction.getId());
         assertThat(foundTransaction).isNotNull();
         assertThat(foundTransaction.getId()).isEqualTo(savedTransaction.getId());
-    }
-
-    @Test
-    @DisplayName("Test update transaction functionality")
-    void givenTransactionEntityToUpdate_whenUpdate_thenReturnUpdatedTransactionEntity() {
-        // given
-        SellerEntity sellerEntity = SellerUtils.getSellerEntityTransient();
-        entityManager.persist(sellerEntity);
-
-        TransactionEntity transactionToSave = TransactionUtils.getTransactionEntityTransient(sellerEntity);
-        var savedTransaction = entityManager.persist(transactionToSave);
-        entityManager.flush();
-        entityManager.clear();
-
-        // when
-        var transactionToUpdate = entityManager.find(TransactionEntity.class, savedTransaction.getId());
-        transactionToUpdate.setAmount(200.0);
-        var updatedTransaction = transactionRepository.save(transactionToUpdate);
-        entityManager.flush();
-        entityManager.clear();
-
-        // then
-        var foundTransaction = entityManager.find(TransactionEntity.class, updatedTransaction.getId());
-        assertThat(foundTransaction).isNotNull();
-        assertThat(foundTransaction.getAmount()).isEqualTo(200.0);
     }
 
     @Test

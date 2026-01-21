@@ -3,6 +3,7 @@ package by.pirog.CRM.service;
 import by.pirog.CRM.dto.sellerDto.request.SellerCreateRequestDto;
 import by.pirog.CRM.dto.sellerDto.request.SellerUpdateRequestDto;
 import by.pirog.CRM.dto.sellerDto.response.SellerResponseDto;
+import by.pirog.CRM.storage.entity.SellerEntity;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface SellerService {
 
     // PUT
     SellerResponseDto replaceSeller(Long sellerId, SellerUpdateRequestDto dto);
+
+    SellerEntity getSellerEntityById(Long id);
 }

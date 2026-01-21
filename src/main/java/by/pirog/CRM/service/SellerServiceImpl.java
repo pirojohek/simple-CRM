@@ -76,4 +76,10 @@ public class SellerServiceImpl implements SellerService {
         return sellerMapper.sellerToResponseDto(entity);
     }
 
+    @Override
+    public SellerEntity getSellerEntityById(Long id) {
+        return this.sellerRepository.findById(id)
+                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + id + "not found"));
+    }
+
 }

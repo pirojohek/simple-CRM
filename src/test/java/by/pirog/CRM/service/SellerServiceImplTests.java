@@ -239,4 +239,33 @@ public class SellerServiceImplTests {
         });
         verify(sellerRepository, never()).save(any(SellerEntity.class));
     }
+
+    @Test
+    @DisplayName("Test get seller entity by id functionality")
+    void givenSellerId_whenGetSellerEntityById_thenReturnSellerEntity(){
+        // given
+        Long sellerId = 1L;
+        var seller = SellerUtils.getSellerEntityPersistent();
+        when(sellerRepository.findById(anyLong()))
+                .thenReturn(Optional.of(seller));
+        // when
+        var response = this.sellerService.getSellerEntityById(anyLong());
+
+        // then
+        assertSame(seller, response);
+    }
+
+    @Test
+    @DisplayName("Test get seller by id not found functinality")
+    void givenSellerId_whenGetSellerEntityById_thenSellerNotFound(){
+        // given
+        Long sellerId = 1L;
+        when(sellerRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        // when
+        assertThrows(SellerNotFoundException.class,
+                () -> sellerService.findSellerById(sellerId)
+        );
+    }
 }

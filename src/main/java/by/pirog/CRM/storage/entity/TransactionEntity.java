@@ -4,6 +4,7 @@ import by.pirog.CRM.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -24,8 +25,8 @@ public class TransactionEntity {
     @JoinColumn(name = "seller_id", nullable = false)
     private SellerEntity seller;
 
-    @Column(name = "amount")
-    private Double amount;
+    @Column(name = "amount", precision = 12, scale = 2)
+    private BigDecimal amount;
 
     @Column(name = "payment_type")
     @Enumerated(EnumType.STRING)
