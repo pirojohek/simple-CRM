@@ -48,6 +48,15 @@ public class GlobalExceptionHandler {
         return new ErrorResponseException(HttpStatus.BAD_REQUEST, problemDetail, ex);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ErrorResponseException handleAll(Exception ex, HttpServletRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        problemDetail.setTitle("Unexpected error");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(URI.create(request.getRequestURI()));
+        problemDetail.setProperty("method", request.getMethod());
+        return new ErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR, problemDetail, ex);
+    }
     private ErrorResponseException buildNotFoundProblem(
             RuntimeException ex,
             HttpServletRequest request,
