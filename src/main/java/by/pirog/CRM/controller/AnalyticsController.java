@@ -41,7 +41,7 @@ public class AnalyticsController {
     public ResponseEntity<List<SellerAnalyticsResponseDto>> findSellersWithSumLessThan(
             @Parameter(
                     description = "Начало периода анализа",
-                    example = "2024-01-01T00:00:00",
+                    example = "2026-01-01T00:00:00",
                     required = true
             )
             @RequestParam
@@ -50,7 +50,7 @@ public class AnalyticsController {
 
             @Parameter(
                     description = "Конец периода анализа",
-                    example = "2024-12-31T23:59:59",
+                    example = "2026-01-10T23:59:59",
                     required = true
             )
             @RequestParam
